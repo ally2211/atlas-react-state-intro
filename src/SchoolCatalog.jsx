@@ -5,6 +5,9 @@ export default function SchoolCatalog() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const rowsPerPage = 5;
 
   useEffect(() => {
     fetch("/api/courses.json")
@@ -18,13 +21,16 @@ export default function SchoolCatalog() {
 
   const handleSort = (column) => {
     if (sortColumn === column) {
-      // Toggle direction
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
-      // Set new column and default to ascending
       setSortColumn(column);
       setSortDirection("asc");
     }
+  };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(0); // Reset to first page on new search
   };
 
   const filteredCourses = courses.filter((course) => {
@@ -40,7 +46,6 @@ export default function SchoolCatalog() {
     let valA = a[sortColumn];
     let valB = b[sortColumn];
 
-    // Convert numeric strings to numbers for accurate sorting
     if (!isNaN(valA) && !isNaN(valB)) {
       valA = Number(valA);
       valB = Number(valB);
@@ -54,6 +59,15 @@ export default function SchoolCatalog() {
     return 0;
   });
 
+  // Pagination logic
+  const startIndex = currentPage * rowsPerPage;
+  const paginatedCourses = sortedCourses.slice(
+    startIndex,
+    startIndex + rowsPerPage
+  );
+  const isFirstPage = currentPage === 0;
+  const isLastPage = startIndex + rowsPerPage >= sortedCourses.length;
+
   return (
     <div className="school-catalog">
       <h1>School Catalog</h1>
@@ -61,7 +75,7 @@ export default function SchoolCatalog() {
         type="text"
         placeholder="Search by course number or name"
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={handleSearch}
       />
       <table>
         <thead>
@@ -79,7 +93,7 @@ export default function SchoolCatalog() {
           </tr>
         </thead>
         <tbody>
-          {sortedCourses.map((course, index) => (
+          {paginatedCourses.map((course, index) => (
             <tr key={index}>
               <td>{course.trimester}</td>
               <td>{course.courseNumber}</td>
@@ -94,8 +108,18 @@ export default function SchoolCatalog() {
         </tbody>
       </table>
       <div className="pagination">
-        <button>Previous</button>
-        <button>Next</button>
+        <button
+          onClick={() => setCurrentPage((p) => p - 1)}
+          disabled={isFirstPage}
+        >
+          Previous
+        </button>
+        <button
+          onClick={() => setCurrentPage((p) => p + 1)}
+          disabled={isLastPage}
+        >
+          Next
+        </button>
       </div>
     </div>
   );
