@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useEnrolledCourses } from "./context/EnrolledCoursesContext.jsx";
 
 export default function SchoolCatalog() {
   const [courses, setCourses] = useState([]);
@@ -6,6 +7,7 @@ export default function SchoolCatalog() {
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
   const [currentPage, setCurrentPage] = useState(0);
+  const { enroll } = useEnrolledCourses();
 
   const rowsPerPage = 5;
 
@@ -101,7 +103,7 @@ export default function SchoolCatalog() {
               <td>{course.semesterCredits}</td>
               <td>{course.totalClockHours}</td>
               <td>
-                <button>Enroll</button>
+                <button onClick={() => enroll(course)}>Enroll</button>
               </td>
             </tr>
           ))}

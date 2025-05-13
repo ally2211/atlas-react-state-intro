@@ -1,13 +1,15 @@
 import SchoolCatalog from "./SchoolCatalog";
 import Header from "./Header";
 import ClassSchedule from "./ClassSchedule";
+import { EnrolledCoursesProvider } from "./context/EnrolledCoursesContext";
 
-export default function App() {
+function App() {
   return (
-    <div>
+    <EnrolledCoursesProvider>
       <Header />
       <SchoolCatalog />
       <ClassSchedule />
-    </div>
+    </EnrolledCoursesProvider>
   );
 }
+export default App;
