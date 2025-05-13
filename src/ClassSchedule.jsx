@@ -2,7 +2,7 @@ import React from "react";
 import { useEnrolledCourses } from "./context/EnrolledCoursesContext";
 
 export default function ClassSchedule() {
-  const { enrolledCourses } = useEnrolledCourses();
+  const { enrolledCourses, drop } = useEnrolledCourses();
 
   if (enrolledCourses.length === 0) {
     return <p>No classes enrolled yet.</p>;
@@ -10,7 +10,7 @@ export default function ClassSchedule() {
 
   return (
     <div className="class-schedule">
-      <h2>Class Schedule</h2>
+      <h2>Class Schedule ({enrolledCourses.length})</h2>
       <table>
         <thead>
           <tr>
@@ -19,6 +19,7 @@ export default function ClassSchedule() {
             <th>Course Name</th>
             <th>Semester Credits</th>
             <th>Total Clock Hours</th>
+            <th>Drop</th>
           </tr>
         </thead>
         <tbody>
@@ -29,6 +30,9 @@ export default function ClassSchedule() {
               <td>{course.courseName}</td>
               <td>{course.semesterCredits}</td>
               <td>{course.totalClockHours}</td>
+              <td>
+                <button onClick={() => drop(course.courseNumber)}>Drop</button>
+              </td>
             </tr>
           ))}
         </tbody>

@@ -13,8 +13,13 @@ export function EnrolledCoursesProvider({ children }) {
     });
   };
 
+  const drop = (courseNumber) => {
+    setEnrolledCourses((prev) =>
+      prev.filter((course) => course.courseNumber !== courseNumber)
+    );
+  };
   return (
-    <EnrolledCoursesContext.Provider value={{ enrolledCourses, enroll }}>
+    <EnrolledCoursesContext.Provider value={{ enrolledCourses, enroll, drop }}>
       {children}
     </EnrolledCoursesContext.Provider>
   );
