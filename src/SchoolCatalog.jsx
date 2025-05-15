@@ -45,20 +45,21 @@ export default function SchoolCatalog() {
 
   const sortedCourses = [...filteredCourses].sort((a, b) => {
     if (!sortColumn) return 0;
+
     let valA = a[sortColumn];
     let valB = b[sortColumn];
 
-    if (!isNaN(valA) && !isNaN(valB)) {
+    const isNumeric = !isNaN(valA) && !isNaN(valB);
+
+    if (isNumeric) {
       valA = Number(valA);
       valB = Number(valB);
+      return (valA - valB) * (sortDirection === "asc" ? 1 : -1);
     } else {
       valA = valA.toString().toLowerCase();
       valB = valB.toString().toLowerCase();
+      return valA.localeCompare(valB) * (sortDirection === "asc" ? 1 : -1);
     }
-
-    if (valA < valB) return sortDirection === "asc" ? -1 : 1;
-    if (valA > valB) return sortDirection === "asc" ? 1 : -1;
-    return 0;
   });
 
   // Pagination logic
